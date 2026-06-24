@@ -317,7 +317,7 @@ section {
   line-height: 1;
   letter-spacing: -0.06em;
   color: var(--purple);
-  opacity: 0.055;
+  opacity: 0.13;
   user-select: none;
   pointer-events: none;
 }
