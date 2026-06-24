@@ -17,7 +17,6 @@
   --maxw: 1120px;
   --radius: 16px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-
   --font: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
@@ -29,9 +28,6 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-html {
   scrollbar-width: none;
 }
 html::-webkit-scrollbar {
@@ -104,18 +100,6 @@ section {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--purple-3);
-}
-
-.section-head {
-  max-width: 620px;
-  margin-bottom: clamp(36px, 5vw, 56px);
-}
-.section-title {
-  margin-top: 14px;
-  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.12;
 }
 
 /* --- Logo ----------------------------------------------------------- */
@@ -200,7 +184,6 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* Padding mirrors #app: 24px min, expands to keep content aligned at wider viewports */
   padding: 18px max(24px, calc((100vw - var(--maxw)) / 2 + 24px));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -241,56 +224,157 @@ section {
   gap: 14px;
 }
 
-/* --- Services / cards ---------------------------------------------- */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+/* --- Services — scroll spotlight ------------------------------------ */
+.services {
+  /* 700vh total: ~116vh of scroll per service for 6 services */
+  height: 700vh;
+  position: relative;
+  /* Override the default section padding — sticky handles its own spacing */
+  padding: 0 !important;
 }
-.card {
-  padding: 28px 26px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.035),
-    rgba(255, 255, 255, 0.01)
-  );
-  transition:
-    transform 0.25s var(--ease),
-    border-color 0.25s var(--ease),
-    background 0.25s var(--ease);
+
+.services-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 0 40px;
+  overflow: hidden;
 }
-.card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-strong);
-  background: linear-gradient(
-    180deg,
-    rgba(139, 92, 246, 0.1),
-    rgba(255, 255, 255, 0.015)
-  );
+
+.services-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
 }
-.card-icon {
+
+.service-counter {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+}
+.counter-cur {
+  color: var(--purple-3);
+  transition: color 0.3s;
+}
+
+/* Slide stack */
+.services-slides {
+  position: relative;
+  flex: 1;
+}
+
+.service-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  pointer-events: none;
+}
+.service-slide.is-active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Ghost number watermark */
+.service-num {
+  position: absolute;
+  top: 50%;
+  left: -0.06em;
+  transform: translateY(-52%);
+  font-size: clamp(9rem, 20vw, 18rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: var(--purple);
+  opacity: 0.055;
+  user-select: none;
+  pointer-events: none;
+}
+
+.service-body {
+  position: relative;
+  z-index: 1;
+}
+
+.service-icon-wrap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
   color: var(--purple-3);
-  background: rgba(108, 64, 255, 0.14);
-  border: 1px solid rgba(196, 181, 253, 0.18);
+  background: rgba(108, 64, 255, 0.12);
+  border: 1px solid rgba(196, 181, 253, 0.16);
+  margin-bottom: 28px;
 }
-.card-title {
-  margin-top: 20px;
-  font-size: 1.18rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+
+.service-name {
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  background: linear-gradient(180deg, #fff 40%, #c8c2e6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
 }
-.card-desc {
-  margin-top: 8px;
+
+.service-desc {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
   color: var(--text-muted);
-  font-size: 0.96rem;
+  max-width: 480px;
+  line-height: 1.65;
+}
+
+/* Bottom bar */
+.services-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.services-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  height: 6px;
+  width: 6px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.35s var(--ease), width 0.35s var(--ease);
+}
+.dot.is-active {
+  background: var(--purple-3);
+  width: 24px;
+}
+
+.scroll-hint {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: opacity 0.6s;
+}
+.scroll-hint.hint-gone {
+  opacity: 0;
 }
 
 /* --- CTA ------------------------------------------------------------ */
@@ -345,22 +429,20 @@ section {
 }
 
 /* --- Responsive ----------------------------------------------------- */
-@media (max-width: 880px) {
-  .card-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 560px) {
-  .card-grid {
-    grid-template-columns: 1fr;
-  }
   .hero-actions .btn {
     flex: 1 1 auto;
   }
   .footer {
     justify-content: center;
     text-align: center;
+  }
+  .service-name {
+    font-size: clamp(2.5rem, 12vw, 3.5rem);
+  }
+  .service-icon-wrap {
+    width: 56px;
+    height: 56px;
   }
 }
 
@@ -369,7 +451,7 @@ section {
     scroll-behavior: auto;
   }
   .btn,
-  .card {
+  .service-slide {
     transition: none;
   }
 }
