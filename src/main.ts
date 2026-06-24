@@ -12,5 +12,5 @@ document.body.insertBefore(nav(), app);
 app.append(hero(), services(), cta(), footer());
 
 // Background mounts asynchronously (waits for noise texture to load).
-const bg = document.getElementById("bg");
-if (bg) mountBackground(bg).catch(() => { /* shader unavailable, page still works */ });
+const bgInner = document.getElementById("bg-inner");
+if (bgInner) mountBackground(bgInner).catch(() => { /* shader unavailable, page still works */ });

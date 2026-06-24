@@ -53,8 +53,15 @@ body::-webkit-scrollbar {
   position: fixed;
   inset: 0;
   z-index: -2;
-  width: 100vw;
-  height: 100vh;
+  overflow: hidden;
+}
+#bg-inner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100vw, 1440px);
+  height: max(100vh, 900px);
 }
 #bg canvas {
   display: block;
@@ -82,11 +89,6 @@ body::-webkit-scrollbar {
 }
 
 @media (max-width: 1024px) {
-  #bg {
-    /* Slight blur smooths the grain without touching the gradient */
-    filter: blur(0.8px);
-  }
-
   #bg-overlay {
     background:
       radial-gradient(
