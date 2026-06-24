@@ -39,6 +39,10 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* --- Background shader + overlay ------------------------------------ */
@@ -185,11 +189,12 @@ section {
   position: sticky;
   top: 0;
   z-index: 10;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 0;
-  margin-bottom: 8px;
+  /* Padding mirrors #app: 24px min, expands to keep content aligned at wider viewports */
+  padding: 18px max(24px, calc((100vw - var(--maxw)) / 2 + 24px));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }

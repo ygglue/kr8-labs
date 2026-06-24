@@ -6,9 +6,10 @@ import { services } from "./sections/services.ts";
 import { cta } from "./sections/cta.ts";
 import { footer } from "./sections/footer.ts";
 
-// Content first — background failure must never block the page.
+// Nav is full-bleed (outside the max-width container).
 const app = document.getElementById("app")!;
-app.append(nav(), hero(), services(), cta(), footer());
+document.body.insertBefore(nav(), app);
+app.append(hero(), services(), cta(), footer());
 
 // Background mounts asynchronously (waits for noise texture to load).
 const bg = document.getElementById("bg");
