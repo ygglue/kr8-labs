@@ -31,6 +31,13 @@ html {
   scroll-behavior: smooth;
 }
 
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   font-family: var(--font);
   background: var(--bg);
