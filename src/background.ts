@@ -42,7 +42,7 @@ export async function mountBackground(target: HTMLElement): Promise<ShaderMount>
     u_colorsCount: colors.length,
     u_softness: 0.7,
     u_intensity: 0.45,
-    u_noise: 0.25,
+    u_noise: 0.25 * Math.min(window.innerWidth / 1440, 1),
     u_shape: GrainGradientShapes.corners,
     u_noiseTexture: noiseImg,
   };
