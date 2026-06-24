@@ -81,19 +81,24 @@ body::-webkit-scrollbar {
     );
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  #bg {
+    /* Slight blur smooths the grain without touching the gradient */
+    filter: blur(0.8px);
+  }
+
   #bg-overlay {
     background:
       radial-gradient(
         140% 90% at 50% -5%,
-        rgba(108, 64, 255, 0.18),
+        rgba(108, 64, 255, 0.22),
         transparent 65%
       ),
       linear-gradient(
         to bottom,
-        rgba(13, 14, 18, 0.15) 0%,
-        rgba(13, 14, 18, 0.32) 50%,
-        rgba(13, 14, 18, 0.72) 100%
+        rgba(13, 14, 18, 0.05) 0%,
+        rgba(13, 14, 18, 0.18) 45%,
+        rgba(13, 14, 18, 0.60) 100%
       );
   }
 }
