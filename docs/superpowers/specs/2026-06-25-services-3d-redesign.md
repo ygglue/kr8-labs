@@ -20,8 +20,13 @@ Replace the flat SVG icons in the scroll-locked Services section with small Thre
 - Dot click scrolls to the same target as before (`sectionTop + (i/count) * range`).
 - The "Scroll to explore" hint and counter (`01 / 06`) stay in their current positions.
 
+### Service slide layout
+- **Desktop**: `.service-slide` is a two-column row — text block (title + description) on the left, 3D canvas on the right. Canvas is `240×240px`, vertically centered.
+- **Mobile**: single column — 3D canvas `160×160px` on top, text block below.
+- The ghost number watermark (`.service-num`) stays behind the text column on desktop; hidden on mobile to avoid clutter.
+
 ### Icon area
-- `.service-icon-wrap` is replaced by a `<canvas>` element: `200×200px` on desktop, `160×160px` on mobile.
+- `.service-icon-wrap` is removed. The canvas element (`.service-icon-canvas`) is positioned as described above.
 - Canvas has `pointer-events: none` and a transparent background (no border, no background fill — the 3D scene provides its own depth/shadow).
 
 ---
