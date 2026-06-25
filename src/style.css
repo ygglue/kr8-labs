@@ -250,6 +250,7 @@ section {
   justify-content: space-between;
   padding: 32px 0 40px;
   overflow: hidden;
+  position: relative;
 }
 
 .services-top {
@@ -349,29 +350,50 @@ section {
 .services-bottom {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-shrink: 0;
 }
 
 .services-dots {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  z-index: 2;
+}
+
+/* Hairline track */
+.services-dots::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+  transform: translateX(-50%);
 }
 
 .dot {
-  height: 6px;
+  position: relative;
+  z-index: 1;
   width: 6px;
+  height: 6px;
   border-radius: 999px;
   border: none;
   background: rgba(255, 255, 255, 0.18);
   cursor: pointer;
   padding: 0;
-  transition: background 0.35s var(--ease), width 0.35s var(--ease);
+  transition: background 0.35s var(--ease), height 0.35s var(--ease);
 }
+
 .dot.is-active {
   background: var(--purple-3);
-  width: 24px;
+  height: 24px;
+  width: 6px;
 }
 
 .scroll-hint {
