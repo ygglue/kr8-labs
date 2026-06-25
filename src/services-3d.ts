@@ -93,10 +93,157 @@ export function initServices3D(
   return { activate, destroy };
 }
 
-// ── Placeholder — replaced in Task 3 ──────────────────────────────────
-function buildScenes(): { scenes: THREE.Scene[]; objects: THREE.Object3D[] } {
+// ── Lights ─────────────────────────────────────────────────────────────
+function addLights(scene: THREE.Scene) {
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+  dir.position.set(2, 3, 3);
+  scene.add(dir);
+}
+
+// ── Shared material (grain injected in Task 4) ─────────────────────────
+function createMaterial(): THREE.MeshStandardMaterial {
+  return new THREE.MeshStandardMaterial({ color: 0x7c5af6, roughness: 0.35, metalness: 0.6 });
+}
+
+// ── Icon: Development — < > brackets ──────────────────────────────────
+function sceneDevelopment(mat: THREE.MeshStandardMaterial): { scene: THREE.Scene; obj: THREE.Object3D } {
   const scene = new THREE.Scene();
-  const obj = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshNormalMaterial());
-  scene.add(obj);
-  return { scenes: [scene], objects: [obj] };
+  addLights(scene);
+  const g = new THREE.Group();
+
+  const bar = () => new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.11, 0.15), mat);
+
+  const lt = bar(); lt.position.set(-0.52,  0.27, 0); lt.rotation.z =  Math.PI / 4;
+  const lb = bar(); lb.position.set(-0.52, -0.27, 0); lb.rotation.z = -Math.PI / 4;
+  const rt = bar(); rt.position.set( 0.52,  0.27, 0); rt.rotation.z = -Math.PI / 4;
+  const rb = bar(); rb.position.set( 0.52, -0.27, 0); rb.rotation.z =  Math.PI / 4;
+
+  g.add(lt, lb, rt, rb);
+  scene.add(g);
+  return { scene, obj: g };
+}
+
+// ── Icon: UI/UX — monitor frame ────────────────────────────────────────
+function sceneUI(mat: THREE.MeshStandardMaterial): { scene: THREE.Scene; obj: THREE.Object3D } {
+  const scene = new THREE.Scene();
+  addLights(scene);
+  const g = new THREE.Group();
+
+  const body   = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.1, 0.12), mat);
+  const topBar = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.18, 0.14), mat);
+  topBar.position.y = 0.64;
+  const stand  = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.3, 0.09), mat);
+  stand.position.y = -0.7;
+  const base   = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.09, 0.22), mat);
+  base.position.y = -0.85;
+
+  g.add(body, topBar, stand, base);
+  scene.add(g);
+  return { scene, obj: g };
+}
+
+// ── Icon: Cloud — sphere + two tilted torus rings ──────────────────────
+function sceneCloud(mat: THREE.MeshStandardMaterial): { scene: THREE.Scene; obj: THREE.Object3D } {
+  const scene = new THREE.Scene();
+  addLights(scene);
+  const g = new THREE.Group();
+
+  const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.65, 16, 12), mat);
+
+  const r1 = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.055, 8, 32), mat);
+  r1.rotation.x = Math.PI / 4;
+
+  const r2 = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.055, 8, 32), mat);
+  r2.rotation.x = -Math.PI / 4;
+  r2.rotation.y =  Math.PI / 2;
+
+  g.add(sphere, r1, r2);
+  scene.add(g);
+  return { scene, obj: g };
+}
+
+// ── Icon: Database — 3 stacked cylinder discs ──────────────────────────
+function sceneDatabase(mat: THREE.MeshStandardMaterial): { scene: THREE.Scene; obj: THREE.Object3D } {
+  const scene = new THREE.Scene();
+  addLights(scene);
+  const g = new THREE.Group();
+
+  const disc = (y: number, r: number) => {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.28, 24), mat);
+    m.position.y = y;
+    return m;
+  };
+
+  g.add(disc(0.58, 0.72), disc(0, 0.82), disc(-0.58, 0.72));
+  scene.add(g);
+  return { scene, obj: g };
+}
+
+// ── Icon: Security — extruded shield ───────────────────────────────────
+function sceneSecurity(mat: THREE.MeshStandardMaterial): { scene: THREE.Scene; obj: THREE.Object3D } {
+  const scene = new THREE.Scene();
+  addLights(scene);
+
+  const shape = new THREE.Shape();
+  shape.moveTo(-0.7,  0.85);
+  shape.lineTo( 0.7,  0.85);
+  shape.lineTo( 0.7,  0.15);
+  shape.bezierCurveTo( 0.7, -0.55,    0, -0.95, 0, -0.95);
+  shape.bezierCurveTo(   0, -0.95, -0.7, -0.55, -0.7, 0.15);
+  shape.closePath();
+
+  const mesh = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(shape, {
+      depth: 0.2, bevelEnabled: true,
+      bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 2,
+    }),
+    mat,
+  );
+  mesh.position.set(0, -0.05, -0.1);
+  scene.add(mesh);
+  return { scene, obj: mesh };
+}
+
+// ── Icon: Performance — extruded lightning bolt ─────────────────────────
+function scenePerformance(mat: THREE.MeshStandardMaterial): { scene: THREE.Scene; obj: THREE.Object3D } {
+  const scene = new THREE.Scene();
+  addLights(scene);
+
+  const shape = new THREE.Shape();
+  shape.moveTo( 0.28,  1.0);
+  shape.lineTo(-0.12,  0.08);
+  shape.lineTo( 0.22,  0.08);
+  shape.lineTo(-0.28, -1.0);
+  shape.lineTo( 0.12, -0.08);
+  shape.lineTo(-0.22, -0.08);
+  shape.closePath();
+
+  const mesh = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(shape, {
+      depth: 0.18, bevelEnabled: true,
+      bevelSize: 0.04, bevelThickness: 0.04, bevelSegments: 2,
+    }),
+    mat,
+  );
+  mesh.position.z = -0.09;
+  scene.add(mesh);
+  return { scene, obj: mesh };
+}
+
+// ── Assemble all scenes ────────────────────────────────────────────────
+function buildScenes(): { scenes: THREE.Scene[]; objects: THREE.Object3D[] } {
+  const mat = createMaterial();
+  const built = [
+    sceneDevelopment(mat),
+    sceneUI(mat),
+    sceneCloud(mat),
+    sceneDatabase(mat),
+    sceneSecurity(mat),
+    scenePerformance(mat),
+  ];
+  return {
+    scenes:  built.map(b => b.scene),
+    objects: built.map(b => b.obj),
+  };
 }
