@@ -281,7 +281,9 @@ section {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  gap: 48px;
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
@@ -312,19 +314,20 @@ section {
 .service-body {
   position: relative;
   z-index: 1;
+  flex: 1;
 }
 
-.service-icon-wrap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  color: var(--purple-3);
-  background: rgba(108, 64, 255, 0.12);
-  border: 1px solid rgba(196, 181, 253, 0.16);
-  margin-bottom: 28px;
+.service-icon-canvas {
+  flex-shrink: 0;
+  width: 240px;
+  height: 240px;
+  order: 2;
+}
+
+.service-icon-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .service-name {
@@ -459,6 +462,24 @@ section {
 }
 
 /* --- Responsive ----------------------------------------------------- */
+@media (max-width: 1024px) {
+  .service-slide {
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .service-icon-canvas {
+    order: 0;
+    width: 160px;
+    height: 160px;
+  }
+
+  .service-num {
+    display: none;
+  }
+}
+
 @media (max-width: 560px) {
   .hero-actions .btn {
     flex: 1 1 auto;
@@ -469,10 +490,6 @@ section {
   }
   .service-name {
     font-size: clamp(2.5rem, 12vw, 3.5rem);
-  }
-  .service-icon-wrap {
-    width: 56px;
-    height: 56px;
   }
 }
 
