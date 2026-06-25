@@ -79,14 +79,22 @@ export function initServices3D(
   if (reducedMotion) {
     renderer.render(scenes[current], camera);
   } else {
+    let isIntersecting = false;
+
     const observer = new IntersectionObserver(
-      ([entry]) => { entry.isIntersecting ? start() : stop(); },
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        isIntersecting ? start() : stop();
+      },
       { threshold: 0 },
     );
     observer.observe(stickyEl);
     stopObserver = () => observer.disconnect();
 
-    const onVisibility = () => { document.hidden ? stop() : start(); };
+    const onVisibility = () => {
+      if (!document.hidden && isIntersecting) start();
+      else stop();
+    };
     document.addEventListener('visibilitychange', onVisibility);
     stopVisibility = () => document.removeEventListener('visibilitychange', onVisibility);
   }
@@ -103,6 +111,18 @@ export function initServices3D(
     stopObserver();
     stopVisibility();
     cleanupCursor();
+    scenes.forEach((scene) => {
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach((m) => m.dispose());
+          } else {
+            obj.material.dispose();
+          }
+        }
+      });
+    });
     renderer.dispose();
   }
 
