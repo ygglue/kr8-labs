@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { getShaderNoiseTexture } from '@paper-design/shaders';
 
 export interface Services3D {
   activate(index: number): void;
@@ -103,7 +104,44 @@ function addLights(scene: THREE.Scene) {
 
 // ── Shared material (grain injected in Task 4) ─────────────────────────
 function createMaterial(): THREE.MeshStandardMaterial {
-  return new THREE.MeshStandardMaterial({ color: 0x7c5af6, roughness: 0.35, metalness: 0.6 });
+  const mat = new THREE.MeshStandardMaterial({ color: 0x7c5af6, roughness: 0.35, metalness: 0.6 });
+
+  const noiseImg = getShaderNoiseTexture();
+  if (!noiseImg) return mat;
+
+  const noiseTexture = new THREE.Texture(noiseImg);
+  noiseTexture.wrapS = THREE.RepeatWrapping;
+  noiseTexture.wrapT = THREE.RepeatWrapping;
+  if (noiseImg.complete) {
+    noiseTexture.needsUpdate = true;
+  } else {
+    noiseImg.addEventListener('load', () => { noiseTexture.needsUpdate = true; });
+  }
+
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.u_noiseTexture  = { value: noiseTexture };
+    shader.uniforms.u_grainIntensity = { value: 0.18 };
+
+    // Declare uniforms before void main()
+    shader.fragmentShader = `
+uniform sampler2D u_noiseTexture;
+uniform float u_grainIntensity;
+` + shader.fragmentShader;
+
+    // Inject grain into shadow regions after Three.js dithering pass
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <dithering_fragment>',
+      `#include <dithering_fragment>
+      {
+        float grain = texture2D(u_noiseTexture, gl_FragCoord.xy / 128.0).r;
+        float lum   = dot(gl_FragColor.rgb, vec3(0.299, 0.587, 0.114));
+        float shadow = 1.0 - smoothstep(0.1, 0.5, lum);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, gl_FragColor.rgb * grain, shadow * u_grainIntensity);
+      }`,
+    );
+  };
+
+  return mat;
 }
 
 // ── Icon: Development — < > brackets ──────────────────────────────────
