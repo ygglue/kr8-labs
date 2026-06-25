@@ -1,5 +1,7 @@
 import { fromHTML } from "../dom.ts";
 import { SERVICES } from "../data.ts";
+import { initServices3D } from '../services-3d.ts';
+import type { Services3D } from '../services-3d.ts';
 
 export function services(): HTMLElement {
   const count = SERVICES.length;
@@ -20,13 +22,7 @@ export function services(): HTMLElement {
             <div class="service-slide${i === 0 ? " is-active" : ""}" data-index="${i}">
               <span class="service-num">0${i + 1}</span>
               <div class="service-body">
-                <span class="service-icon-wrap">
-                  <svg viewBox="0 0 24 24" width="52" height="52" fill="none"
-                       stroke="currentColor" stroke-width="1.4"
-                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    ${s.icon}
-                  </svg>
-                </span>
+                <div class="service-icon-canvas" aria-hidden="true"></div>
                 <h3 class="service-name">${s.title}</h3>
                 <p class="service-desc">${s.description}</p>
               </div>
@@ -34,13 +30,14 @@ export function services(): HTMLElement {
           `).join("")}
         </div>
 
+        <div class="services-dots" role="tablist" aria-label="Services">
+          ${SERVICES.map((s, i) => `
+            <button class="dot${i === 0 ? " is-active" : ""}"
+                    role="tab" aria-label="${s.title}" data-dot="${i}"></button>
+          `).join("")}
+        </div>
+
         <div class="services-bottom">
-          <div class="services-dots" role="tablist" aria-label="Services">
-            ${SERVICES.map((s, i) => `
-              <button class="dot${i === 0 ? " is-active" : ""}"
-                      role="tab" aria-label="${s.title}" data-dot="${i}"></button>
-            `).join("")}
-          </div>
           <p class="scroll-hint">Scroll to explore</p>
         </div>
 
@@ -54,6 +51,7 @@ export function services(): HTMLElement {
   const hint    = section.querySelector<HTMLElement>(".scroll-hint")!;
   let current = 0;
   let hinted  = false;
+  let s3d: Services3D | null = null;
 
   function activate(index: number) {
     if (index === current) return;
@@ -63,6 +61,7 @@ export function services(): HTMLElement {
     slides[current].classList.add("is-active");
     dots[current].classList.add("is-active");
     counter.textContent = String(index + 1).padStart(2, "0");
+    s3d?.activate(index);
   }
 
   function onScroll() {
@@ -91,6 +90,12 @@ export function services(): HTMLElement {
       const target   = top + (i / count) * range;
       window.scrollTo({ top: target, behavior: "smooth" });
     });
+  });
+
+  requestAnimationFrame(() => {
+    const canvasSlots = Array.from(section.querySelectorAll<HTMLElement>('.service-icon-canvas'));
+    const sticky = section.querySelector<HTMLElement>('.services-sticky')!;
+    s3d = initServices3D(sticky, canvasSlots);
   });
 
   return section;
