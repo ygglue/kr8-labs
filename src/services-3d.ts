@@ -20,19 +20,40 @@ export function initServices3D(
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 4;
 
-  const { scenes, objects: _objects } = buildScenes();
+  const { scenes, objects } = buildScenes();
   let current = 0;
 
   // Place canvas in first slot
   canvasSlots[0].appendChild(renderer.domElement);
 
-  // ── Rotation target (filled in Task 6) ─────────────────────────────
-  // rotation targets — written by cursor listener (Task 6), read by updateMeshRotation (Task 6)
-  const rot = { x: 0, y: 0 };
-  let cleanupCursor = () => {};
+  // ── Rotation target ─────────────────────────────────────────────────
+  const MAX_ANGLE = Math.PI / 10; // ±18°
+  const LERP = 0.08;
+  let targetRotX = 0;
+  let targetRotY = 0;
 
   function updateMeshRotation() {
-    void rot; // Task 6 will read rot.x / rot.y here
+    const obj = objects[current];
+    if (!obj) return;
+    if (IS_MOBILE) {
+      obj.rotation.y += 0.008;
+    } else {
+      obj.rotation.x += (targetRotX - obj.rotation.x) * LERP;
+      obj.rotation.y += (targetRotY - obj.rotation.y) * LERP;
+    }
+  }
+
+  let cleanupCursor = () => {};
+  if (!IS_MOBILE) {
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = stickyEl.getBoundingClientRect();
+      const nx = ((e.clientX - rect.left) / rect.width)  * 2 - 1;
+      const ny = ((e.clientY - rect.top)  / rect.height) * 2 - 1;
+      targetRotY =  nx * MAX_ANGLE;
+      targetRotX = -ny * MAX_ANGLE;
+    };
+    stickyEl.addEventListener('mousemove', onMouseMove);
+    cleanupCursor = () => stickyEl.removeEventListener('mousemove', onMouseMove);
   }
 
   // ── Animation loop (filled in Task 5) ──────────────────────────────
