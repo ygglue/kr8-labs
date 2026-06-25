@@ -49,33 +49,25 @@ export function initServices3D(
     renderer.render(scenes[current], camera);
   }
 
-  function start() {
-    if (rafId) return;
-    rafId = requestAnimationFrame(tick);
-  }
-  function stop() {
-    cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
+  function start() { if (!rafId) rafId = requestAnimationFrame(tick); }
+  function stop()  { cancelAnimationFrame(rafId); rafId = 0; }
+
+  let stopObserver = () => {};
+  let stopVisibility = () => {};
 
   if (reducedMotion) {
     renderer.render(scenes[current], camera);
   } else {
-    const observer = new IntersectionObserver(([entry]) => {
-      entry.isIntersecting ? start() : stop();
-    }, { threshold: 0 });
-    observer.observe(stickyEl);
-
-    const onVisibility = () => {
-      if (document.hidden) stop();
-      else start();
-    };
-    document.addEventListener('visibilitychange', onVisibility);
-
-    // store for destroy
-    (cleanupCursor as unknown as { _obs: IntersectionObserver }) = Object.assign(
-      cleanupCursor, { _obs: observer, _vis: onVisibility }
+    const observer = new IntersectionObserver(
+      ([entry]) => { entry.isIntersecting ? start() : stop(); },
+      { threshold: 0 },
     );
+    observer.observe(stickyEl);
+    stopObserver = () => observer.disconnect();
+
+    const onVisibility = () => { document.hidden ? stop() : start(); };
+    document.addEventListener('visibilitychange', onVisibility);
+    stopVisibility = () => document.removeEventListener('visibilitychange', onVisibility);
   }
 
   function activate(index: number) {
@@ -87,6 +79,8 @@ export function initServices3D(
 
   function destroy() {
     stop();
+    stopObserver();
+    stopVisibility();
     cleanupCursor();
     renderer.dispose();
   }
