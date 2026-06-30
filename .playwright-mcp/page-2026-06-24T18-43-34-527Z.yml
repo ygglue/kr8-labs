@@ -1,0 +1,92 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e5]:
+    - link "KR8 Labs home" [ref=e6] [cursor=pointer]:
+      - /url: "#top"
+      - generic [ref=e7]:
+        - img [ref=e8]
+        - generic [ref=e11]:
+          - strong [ref=e12]: KR8
+          - text: Labs
+    - link "Start a project" [ref=e13] [cursor=pointer]:
+      - /url: mailto:hello@kr8labs.com
+  - generic [ref=e14]:
+    - generic [ref=e15]:
+      - paragraph [ref=e16]: CRAFT · ∞ · BUILD WITHOUT LIMITS
+      - heading "Building digital experiences that scale infinitely" [level=1] [ref=e17]
+      - paragraph [ref=e18]: KR8 Labs is a modern web development company building scalable, high-performance digital experiences.
+      - generic [ref=e19]:
+        - link "Start a project" [ref=e20] [cursor=pointer]:
+          - /url: mailto:hello@kr8labs.com
+        - link "View our work" [ref=e21] [cursor=pointer]:
+          - /url: "#services"
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: 02 · WHAT WE DO
+        - generic [ref=e26]: 01 / 06
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic: "01"
+          - generic [ref=e29]:
+            - img [ref=e31]
+            - heading "Development" [level=3] [ref=e34]
+            - paragraph [ref=e35]: Robust, maintainable code engineered for the long run.
+        - generic:
+          - generic: "02"
+          - generic:
+            - generic:
+              - img
+            - heading "UI / UX" [level=3]
+            - paragraph: Interfaces that feel effortless and look unmistakable.
+        - generic:
+          - generic: "03"
+          - generic:
+            - generic:
+              - img
+            - heading "Cloud" [level=3]
+            - paragraph: Scalable infrastructure that grows with your traffic.
+        - generic:
+          - generic: "04"
+          - generic:
+            - generic:
+              - img
+            - heading "Database" [level=3]
+            - paragraph: Fast, reliable data layers designed to never lose a byte.
+        - generic:
+          - generic: "05"
+          - generic:
+            - generic:
+              - img
+            - heading "Security" [level=3]
+            - paragraph: Hardened by default — your users and data stay protected.
+        - generic:
+          - generic: "06"
+          - generic:
+            - generic:
+              - img
+            - heading "Performance" [level=3]
+            - paragraph: Sub-second load times tuned to the millisecond.
+      - generic [ref=e36]:
+        - tablist "Services" [ref=e37]:
+          - tab "Development" [ref=e38] [cursor=pointer]
+          - tab "UI / UX" [ref=e39] [cursor=pointer]
+          - tab "Cloud" [ref=e40] [cursor=pointer]
+          - tab "Database" [ref=e41] [cursor=pointer]
+          - tab "Security" [ref=e42] [cursor=pointer]
+          - tab "Performance" [ref=e43] [cursor=pointer]
+        - paragraph [ref=e44]: Scroll to explore
+    - generic [ref=e46]:
+      - paragraph [ref=e47]: LET'S BUILD
+      - heading "Ready to build without limits?" [level=2] [ref=e48]
+      - paragraph [ref=e49]: Tell us what you're creating. We'll help you craft it.
+      - link "Start a project" [ref=e50] [cursor=pointer]:
+        - /url: mailto:hello@kr8labs.com
+    - contentinfo [ref=e51]:
+      - link "KR8 Labs home" [ref=e52] [cursor=pointer]:
+        - /url: "#top"
+        - generic [ref=e53]:
+          - img [ref=e54]
+          - generic [ref=e57]:
+            - strong [ref=e58]: KR8
+            - text: Labs
+      - paragraph [ref=e59]: Build without limits.
+      - paragraph [ref=e60]: © 2026 KR8 Labs

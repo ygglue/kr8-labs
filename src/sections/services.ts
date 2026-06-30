@@ -22,10 +22,10 @@ export function services(): HTMLElement {
             <div class="service-slide${i === 0 ? " is-active" : ""}" data-index="${i}">
               <span class="service-num">0${i + 1}</span>
               <div class="service-body">
-                <div class="service-icon-canvas" aria-hidden="true"></div>
                 <h3 class="service-name">${s.title}</h3>
                 <p class="service-desc">${s.description}</p>
               </div>
+              <div class="service-icon-canvas" aria-hidden="true"></div>
             </div>
           `).join("")}
         </div>

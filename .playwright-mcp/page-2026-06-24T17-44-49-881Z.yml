@@ -1,0 +1,65 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - link "KR8 Labs home" [ref=e6] [cursor=pointer]:
+      - /url: "#top"
+      - generic [ref=e7]:
+        - img [ref=e8]
+        - generic [ref=e11]:
+          - strong [ref=e12]: KR8
+          - text: Labs
+    - link "Start a project" [ref=e13] [cursor=pointer]:
+      - /url: mailto:hello@kr8labs.com
+  - generic [ref=e14]:
+    - paragraph [ref=e15]: CRAFT · ∞ · BUILD WITHOUT LIMITS
+    - heading "Building digital experiences that scale infinitely" [level=1] [ref=e16]
+    - paragraph [ref=e17]: KR8 Labs is a modern web development company building scalable, high-performance digital experiences.
+    - generic [ref=e18]:
+      - link "Start a project" [ref=e19] [cursor=pointer]:
+        - /url: mailto:hello@kr8labs.com
+      - link "View our work" [ref=e20] [cursor=pointer]:
+        - /url: "#services"
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - paragraph [ref=e23]: 02 · WHAT WE DO
+      - heading "Everything you need to ship and scale" [level=2] [ref=e24]
+    - generic [ref=e25]:
+      - article [ref=e26]:
+        - img [ref=e28]
+        - heading "Development" [level=3] [ref=e31]
+        - paragraph [ref=e32]: Robust, maintainable code engineered for the long run.
+      - article [ref=e33]:
+        - img [ref=e35]
+        - heading "UI / UX" [level=3] [ref=e37]
+        - paragraph [ref=e38]: Interfaces that feel effortless and look unmistakable.
+      - article [ref=e39]:
+        - img [ref=e41]
+        - heading "Cloud" [level=3] [ref=e43]
+        - paragraph [ref=e44]: Scalable infrastructure that grows with your traffic.
+      - article [ref=e45]:
+        - img [ref=e47]
+        - heading "Database" [level=3] [ref=e51]
+        - paragraph [ref=e52]: Fast, reliable data layers designed to never lose a byte.
+      - article [ref=e53]:
+        - img [ref=e55]
+        - heading "Security" [level=3] [ref=e58]
+        - paragraph [ref=e59]: Hardened by default — your users and data stay protected.
+      - article [ref=e60]:
+        - img [ref=e62]
+        - heading "Performance" [level=3] [ref=e64]
+        - paragraph [ref=e65]: Sub-second load times tuned to the millisecond.
+  - generic [ref=e67]:
+    - paragraph [ref=e68]: LET'S BUILD
+    - heading "Ready to build without limits?" [level=2] [ref=e69]
+    - paragraph [ref=e70]: Tell us what you're creating. We'll help you craft it.
+    - link "Start a project" [ref=e71] [cursor=pointer]:
+      - /url: mailto:hello@kr8labs.com
+  - contentinfo [ref=e72]:
+    - link "KR8 Labs home" [ref=e73] [cursor=pointer]:
+      - /url: "#top"
+      - generic [ref=e74]:
+        - img [ref=e75]
+        - generic [ref=e78]:
+          - strong [ref=e79]: KR8
+          - text: Labs
+    - paragraph [ref=e80]: Build without limits.
+    - paragraph [ref=e81]: © 2026 KR8 Labs

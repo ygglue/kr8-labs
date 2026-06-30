@@ -1,0 +1,8 @@
+[     533ms] Error: Paper Shaders: image for uniform u_noiseTexture must be fully loaded
+    at ShaderMount.setTextureUniform (http://localhost:5174/node_modules/.vite/deps/@paper-design_shaders.js?v=23a989b9:333:15)
+    at http://localhost:5174/node_modules/.vite/deps/@paper-design_shaders.js?v=23a989b9:396:16
+    at Array.forEach (<anonymous>)
+    at ShaderMount.setUniformValues (http://localhost:5174/node_modules/.vite/deps/@paper-design_shaders.js?v=23a989b9:383:39)
+    at new ShaderMount (http://localhost:5174/node_modules/.vite/deps/@paper-design_shaders.js?v=23a989b9:545:10)
+    at mountBackground (http://localhost:5174/src/background.ts:34:10)
+    at http://localhost:5174/src/main.ts:9:9

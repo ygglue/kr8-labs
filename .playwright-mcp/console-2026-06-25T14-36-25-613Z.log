@@ -1,0 +1,28 @@
+[ 3395135ms] ReferenceError: createEdgeMaterial is not defined
+    at buildScenes (http://localhost:5175/src/services-3d.ts?t=1782401580346:317:19)
+    at initServices3D (http://localhost:5175/src/services-3d.ts?t=1782401580346:10:57)
+    at http://localhost:5175/src/sections/services.ts?t=1782401580346:89:11
+[ 3404042ms] ReferenceError: createEdgeMaterial is not defined
+    at buildScenes (http://localhost:5175/src/services-3d.ts?t=1782401589417:317:19)
+    at initServices3D (http://localhost:5175/src/services-3d.ts?t=1782401589417:10:57)
+    at http://localhost:5175/src/sections/services.ts?t=1782401589417:89:11
+[ 3434656ms] ReferenceError: createEdgeMaterial is not defined
+    at buildScenes (http://localhost:5175/src/services-3d.ts?t=1782401616957:362:19)
+    at initServices3D (http://localhost:5175/src/services-3d.ts?t=1782401616957:12:57)
+    at http://localhost:5175/src/sections/services.ts?t=1782401616957:89:11
+[ 3457688ms] ReferenceError: createEdgeMaterial is not defined
+    at buildScenes (http://localhost:5175/src/services-3d.ts?t=1782401643005:362:19)
+    at initServices3D (http://localhost:5175/src/services-3d.ts?t=1782401643005:12:57)
+    at http://localhost:5175/src/sections/services.ts?t=1782401643005:89:11
+[ 3463784ms] ReferenceError: createEdgeMaterial is not defined
+    at buildScenes (http://localhost:5175/src/services-3d.ts?t=1782401649121:362:19)
+    at initServices3D (http://localhost:5175/src/services-3d.ts?t=1782401649121:12:57)
+    at http://localhost:5175/src/sections/services.ts?t=1782401649121:89:11
+[ 3469617ms] ReferenceError: createEdgeMaterial is not defined
+    at buildScenes (http://localhost:5175/src/services-3d.ts?t=1782401654995:362:19)
+    at initServices3D (http://localhost:5175/src/services-3d.ts?t=1782401654995:12:57)
+    at http://localhost:5175/src/sections/services.ts?t=1782401654995:89:11
+[ 3475289ms] ReferenceError: createEdgeMaterial is not defined
+    at buildScenes (http://localhost:5175/src/services-3d.ts?t=1782401660631:362:19)
+    at initServices3D (http://localhost:5175/src/services-3d.ts?t=1782401660631:12:57)
+    at http://localhost:5175/src/sections/services.ts?t=1782401660631:89:11
