@@ -45,7 +45,8 @@ description: Use when adding, editing, or styling any UI element on the KR8 Labs
 ```html
 <p class="eyebrow">02 · SECTION NAME</p>
 ```
-→ `font-mono`, `0.75rem`, `font-weight: 600`, `letter-spacing: 0.1em`, uppercase, `color: var(--text-muted)`
+→ `font-mono`, `0.75rem`, `font-weight: 600`, `letter-spacing: 0.1em`, uppercase, `color: var(--accent-lavender)`
+→ Numbering convention: content sections are prefixed `01 · `, `02 · `, etc. starting with "01 · WHAT WE DO" for the services section.
 
 **Headline** (hero, section titles)
 ```css
@@ -78,11 +79,27 @@ background: var(--surface);
 - No gradients, no glow shadows, no lift transforms on hover
 - Transition: `background 150ms ease, border-color 150ms ease`
 
-## Services grid
+## Section patterns
 
-Services are displayed as a 3-column card grid (`grid-template-columns: repeat(3, 1fr)`). Each card has a wireframe 3D icon (160x160 canvas), title, and description. Responsive collapse: 2 columns at 768px, 1 column at 480px.
+### Services grid
+Services are displayed as a 3-column card grid (`grid-template-columns: repeat(3, 1fr)`, 1px gap creates hairline grid lines). Each card has a wireframe 3D icon (160x160 canvas), title, and description. Responsive collapse: 2 columns at 768px, 1 column at 480px.
 
-Wireframe icons are built in `src/services-3d.ts` using Three.js `EdgesGeometry` + `LineSegments` with white `LineBasicMaterial`. Each card gets its own renderer for simultaneous display.
+### Tech Stack
+4-column grid (`repeat(4, 1fr)`). Each column: mono category header (lavender) + list of tech names. Collapses to 2 columns at 768px, 1 column at 480px.
+
+### Why KR8 Labs
+2-column bullet grid. Each item prefixed with a lavender `+` marker. Collapses to 1 column at 768px.
+
+### Process
+Horizontal flex row of 7 steps. Each step: mono number (lavender) + step name (muted). Wraps at 768px.
+
+### FAQ
+Native `<details><summary>` accordion — zero JS. Each item: mono question (white) + body answer (muted). Open state: question turns lavender, a `−` replaces the `+` marker. Hairline borders between items.
+
+### Navigation
+Sticky nav with logo left, anchor links center (mono, muted → white on hover), CTA button right. Anchor links hidden on mobile (≤768px).
+
+Wireframe icons are built in `src/services-3d.ts` using Three.js `EdgesGeometry` + `LineSegments` with lavender `LineBasicMaterial`. Each card gets its own renderer for simultaneous display.
 
 ## Adding a new section
 
@@ -104,9 +121,9 @@ export function mySection(): HTMLElement {
 ```
 4. Mount in `src/main.ts` — insert between existing calls:
 ```ts
-app.append(nav(), hero(), services(), /* mySection(), */ cta(), footer());
+app.append(hero(), services(), techStack(), whyKr8(), process(), faq(), /* mySection(), */ cta(), footer());
 ```
-5. Add styles to `src/style.css` in section order (after services, before CTA). Use sharp borders, Geist fonts, and monochrome palette.
+5. Add styles to `src/style.css` in section order (after services, before CTA). Use sharp borders, Geist fonts, and monochrome palette with lavender accents for section markers and category headers.
 
 ## Class naming
 

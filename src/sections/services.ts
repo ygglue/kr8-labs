@@ -6,7 +6,7 @@ export function services(): HTMLElement {
   const section = fromHTML(`
     <section class="services" id="services">
       <div class="services-header">
-        <p class="eyebrow">02 · WHAT WE DO</p>
+        <p class="eyebrow">01 · WHAT WE DO</p>
         <h2>Capabilities</h2>
       </div>
       <div class="services-grid">

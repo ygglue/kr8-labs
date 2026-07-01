@@ -191,6 +191,24 @@ section {
 .nav-brand {
   text-decoration: none;
 }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--btn-transition);
+}
+.nav-links a:hover {
+  color: var(--text);
+}
 
 /* --- Hero ----------------------------------------------------------- */
 .hero {
@@ -285,6 +303,162 @@ section {
   max-width: 260px;
 }
 
+/* --- Tech Stack ----------------------------------------------------- */
+.tech-stack-header,
+.why-kr8-header,
+.process-header,
+.faq-header {
+  margin-bottom: 64px;
+}
+.tech-stack-header h2,
+.why-kr8-header h2,
+.process-header h2,
+.faq-header h2 {
+  margin-top: 12px;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 450;
+  letter-spacing: -0.05em;
+  line-height: 1.0;
+}
+
+.tech-stack-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  border: 1px solid var(--border);
+}
+.tech-stack-col {
+  padding: 32px 28px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.tech-stack-category {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-lavender);
+  margin-bottom: 16px;
+}
+.tech-stack-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tech-stack-list li {
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
+/* --- Why KR8 Labs --------------------------------------------------- */
+.why-kr8-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  border: 1px solid var(--border);
+  list-style: none;
+}
+.why-kr8-item {
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.9375rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+.why-kr8-item::before {
+  content: "+";
+  font-family: var(--font-mono);
+  color: var(--accent-lavender);
+  margin-right: 10px;
+}
+
+/* --- Process -------------------------------------------------------- */
+.process-steps {
+  display: flex;
+  flex-wrap: nowrap;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.process-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 16px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  text-align: center;
+}
+.process-step:last-child {
+  border-right: none;
+}
+.process-step-num {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-lavender);
+}
+.process-step-name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* --- FAQ ------------------------------------------------------------ */
+.faq-list {
+  border: 1px solid var(--border);
+}
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.faq-item:last-child {
+  border-bottom: none;
+}
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  transition: color var(--btn-transition);
+  list-style: none;
+}
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+.faq-question::after {
+  content: "+";
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-left: 16px;
+  flex-shrink: 0;
+  transition: transform var(--btn-transition);
+}
+.faq-item[open] .faq-question::after {
+  content: "−";
+}
+.faq-item[open] .faq-question {
+  color: var(--accent-lavender);
+}
+.faq-answer {
+  padding: 0 28px 24px;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
 /* --- CTA ------------------------------------------------------------ */
 .cta-inner {
   text-align: center;
@@ -311,12 +485,35 @@ section {
 /* --- Footer --------------------------------------------------------- */
 .footer {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 40px;
   padding: 48px 0;
   border-top: 1px solid var(--border);
+}
+.footer-left {
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.footer-about-title {
+  font-size: 1.125rem;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.footer-about-body {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
 }
 .footer-tag {
   color: var(--text-muted);
@@ -341,18 +538,40 @@ section {
     width: 120px;
     height: 120px;
   }
+  .tech-stack-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .why-kr8-list {
+    grid-template-columns: 1fr;
+  }
+  .process-steps {
+    flex-wrap: wrap;
+  }
+  .process-step {
+    flex: 1 1 50%;
+    min-width: 140px;
+  }
+  .nav-links {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
   .services-grid {
     grid-template-columns: 1fr;
   }
+  .tech-stack-grid {
+    grid-template-columns: 1fr;
+  }
   .hero-actions .btn {
     flex: 1 1 auto;
   }
   .footer {
-    justify-content: center;
-    text-align: center;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .footer-right {
+    align-items: flex-start;
   }
 }
 
