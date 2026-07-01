@@ -19,6 +19,9 @@ description: Use when adding, editing, or styling any UI element on the KR8 Labs
 --border-strong: rgba(255,255,255,0.2)       /* hover / accent border */
 --accent: #ffffff           /* monochrome accent pattern (inverted buttons) */
 --code-pink: #f81ce5        /* code highlight / subtle accent only */
+--accent-lavender: #c4b5fd  /* favicon light stop — eyebrow labels, wireframe 3D icons */
+--accent-purple: #8b5cf6    /* favicon mid stop — reserved */
+--accent-deep: #6c40ff      /* favicon deep stop — hero background glow */
 
 /* Layout */
 --maxw: 1200px              /* content column width */

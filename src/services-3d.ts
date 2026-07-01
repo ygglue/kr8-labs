@@ -10,7 +10,7 @@ const FOV = 45;
 
 function createWireframeMaterial(opacity: number): THREE.LineBasicMaterial {
   return new THREE.LineBasicMaterial({
-    color: 0xffffff,
+    color: 0xc4b5fd,
     transparent: true,
     opacity,
     depthTest: true,
