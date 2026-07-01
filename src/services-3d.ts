@@ -176,13 +176,14 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
   function start() { if (!rafId) rafId = requestAnimationFrame(tick); }
   function stop()  { cancelAnimationFrame(rafId); rafId = 0; }
 
+  const grid = canvasSlots[0].closest<HTMLElement>(".services-grid")!;
   const observer = new IntersectionObserver(
     ([entry]) => {
       entry.isIntersecting && !reducedMotion ? start() : stop();
     },
     { threshold: 0 },
   );
-  observer.observe(canvasSlots[0]);
+  observer.observe(grid);
 
   if (reducedMotion) {
     for (let i = 0; i < scenes.length; i++) {
