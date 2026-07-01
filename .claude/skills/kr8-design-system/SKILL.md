@@ -8,23 +8,32 @@ description: Use when adding, editing, or styling any UI element on the KR8 Labs
 ## Tokens — always use these, never hardcode values
 
 ```css
-/* Color */
---purple: #6c40ff        /* primary CTA, icons, accents */
---purple-2: #8b5cf6      /* secondary purple, gradients */
---purple-3: #c4b5fd      /* light accent, icon color, eyebrow text */
---bg: #0d0e12            /* page background */
---surface: #15161c       /* card/panel base */
---surface-2: #1f2026     /* elevated surface */
---border: rgba(255,255,255,0.09)          /* default hairline */
---border-strong: rgba(196,181,253,0.35)   /* hover / featured border */
---text: #f4f4f6          /* primary text */
---text-muted: #9a9ca5    /* secondary / descriptive text */
+/* Color — Vercel-inspired, high-contrast dark */
+--bg: #000000              /* true black canvas */
+--surface: #0a0a0a          /* card / raised surface */
+--surface-2: #111111        /* hover surface */
+--text: #ffffff             /* primary text */
+--text-muted: #a1a1a1       /* secondary / descriptive text */
+--text-subtle: #666666      /* tertiary / footer labels */
+--border: rgba(255,255,255,0.12)             /* default hairline */
+--border-strong: rgba(255,255,255,0.2)       /* hover / accent border */
+--accent: #ffffff           /* monochrome accent pattern (inverted buttons) */
+--code-pink: #f81ce5        /* code highlight / subtle accent only */
 
 /* Layout */
---maxw: 1120px      /* content column width */
---radius: 16px      /* standard card radius */
---ease: cubic-bezier(0.22,1,0.36,1)  /* all transitions */
---font: "Space Grotesk", ui-sans-serif, system-ui, sans-serif
+--maxw: 1200px              /* content column width */
+--gutter: 32px              /* horizontal page padding */
+--section-gap: 160px        /* vertical spacing between sections */
+--header-h: 64px            /* sticky nav height */
+--radius: 0                 /* sharp everywhere — no rounded corners */
+
+/* Motion */
+--ease: cubic-bezier(0.4, 0, 0.2, 1)
+--btn-transition: 150ms var(--ease)
+
+/* Typography */
+--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif
+--font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace
 ```
 
 ## Recurring patterns
@@ -33,45 +42,49 @@ description: Use when adding, editing, or styling any UI element on the KR8 Labs
 ```html
 <p class="eyebrow">02 · SECTION NAME</p>
 ```
-→ `0.72rem`, `letter-spacing: 0.22em`, uppercase, `color: var(--purple-3)`
+→ `font-mono`, `0.75rem`, `font-weight: 600`, `letter-spacing: 0.1em`, uppercase, `color: var(--text-muted)`
 
-**Gradient headline** (hero, service name, CTA title)
+**Headline** (hero, section titles)
 ```css
-background: linear-gradient(180deg, #fff 40%, #c8c2e6 100%);
--webkit-background-clip: text;
-background-clip: text;
-color: transparent;
+font-weight: 450;
+letter-spacing: -0.05em;
+line-height: 1.0;
+text-wrap: balance;
+color: var(--text);   /* solid white — no text gradients */
 ```
 
-**Glassy card**
+**Card**
 ```css
 border: 1px solid var(--border);
-border-radius: var(--radius);
-background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01));
-/* hover: border-color → var(--border-strong), bg tint with rgba(139,92,246,0.1) */
-```
-
-**Glassy icon pill**
-```css
-background: rgba(108,64,255,0.12);
-border: 1px solid rgba(196,181,253,0.16);
-color: var(--purple-3);
-border-radius: 12–18px;
+border-radius: var(--radius);   /* 0 = sharp */
+background: var(--surface);
+/* hover: border-color → var(--border-strong), background → var(--surface-2) */
+/* no shadows, no glow, no lift transforms */
 ```
 
 ## Buttons
 
 | Class | Use |
 |---|---|
-| `.btn .btn-primary` | Primary CTA — purple gradient, glow shadow |
-| `.btn .btn-ghost` | Secondary — transparent + hairline border |
-| `.btn-sm` | Nav button |
-| `.btn-lg` | CTA band button |
+| `.btn .btn-primary` | Primary CTA — white bg, black text (inversion pattern) |
+| `.btn .btn-ghost` | Secondary — transparent + hairline white border |
+| `.btn-sm` | Compact button (32px-ish height) |
+| `.btn-lg` | Large button (40px-ish height) |
+
+- All buttons: `border-radius: 0` (sharp), `font-size: 0.875rem`, `font-weight: 500`
+- No gradients, no glow shadows, no lift transforms on hover
+- Transition: `background 150ms ease, border-color 150ms ease`
+
+## Services grid
+
+Services are displayed as a 3-column card grid (`grid-template-columns: repeat(3, 1fr)`). Each card has a wireframe 3D icon (160x160 canvas), title, and description. Responsive collapse: 2 columns at 768px, 1 column at 480px.
+
+Wireframe icons are built in `src/services-3d.ts` using Three.js `EdgesGeometry` + `LineSegments` with white `LineBasicMaterial`. Each card gets its own renderer for simultaneous display.
 
 ## Adding a new section
 
 1. Create `src/sections/my-section.ts`
-2. Import helpers and copy:
+2. Import helpers:
 ```ts
 import { fromHTML } from "../dom.ts";
 import { CONTACT_EMAIL, SITE } from "../data.ts";
@@ -90,7 +103,7 @@ export function mySection(): HTMLElement {
 ```ts
 app.append(nav(), hero(), services(), /* mySection(), */ cta(), footer());
 ```
-5. Add styles to `src/style.css` in section order (after services, before CTA).
+5. Add styles to `src/style.css` in section order (after services, before CTA). Use sharp borders, Geist fonts, and monochrome palette.
 
 ## Class naming
 
@@ -99,9 +112,8 @@ No double-underscore (`__`) or modifier (`--`) BEM. Match the existing pattern i
 
 ## Layout
 
-`#app` is `max-width: 1120px; margin: 0 auto; padding: 0 24px`.  
-The nav breaks out of `#app` (mounted before it in the DOM) and uses `padding: 18px max(24px, calc((100vw - 1120px)/2 + 24px))` to stay aligned.  
-For a full-bleed section, use `height: Nvh; padding: 0 !important` and a sticky inner panel (see `.services`).
+`#app` is `max-width: 1200px; margin: 0 auto; padding: 0 32px`.  
+The nav is full-width with `padding: 0 32px`, `height: 64px`, a hairline bottom border, and a semi-transparent black background with `backdrop-filter: blur(12px)`.
 
 ## Copy & data
 
