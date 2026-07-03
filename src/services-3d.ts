@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 export interface Services3D {
   destroy(): void;
@@ -22,7 +25,7 @@ type SceneBuilder = () => { scene: THREE.Scene; group: THREE.Group };
 function sceneDevelopment(): ReturnType<SceneBuilder> {
   const scene = new THREE.Scene();
   const group = new THREE.Group();
-  const mat = createWireframeMaterial(0.55);
+  const mat = createWireframeMaterial(0.7);
   const bar = () => new THREE.BoxGeometry(0.62, 0.11, 0.15);
   const placements: [number, number, number, number, number, number][] = [
     [-0.52,  0.27, 0, 0, 0,  Math.PI / 4],
@@ -44,7 +47,7 @@ function sceneDevelopment(): ReturnType<SceneBuilder> {
 function sceneUI(): ReturnType<SceneBuilder> {
   const scene = new THREE.Scene();
   const group = new THREE.Group();
-  const mat = createWireframeMaterial(0.55);
+  const mat = createWireframeMaterial(0.7);
   const items: { geo: THREE.BufferGeometry; pos?: [number, number, number] }[] = [
     { geo: new THREE.BoxGeometry(1.8, 1.1, 0.12) },
     { geo: new THREE.BoxGeometry(1.8, 0.18, 0.14), pos: [0,  0.64, 0] },
@@ -64,13 +67,13 @@ function sceneUI(): ReturnType<SceneBuilder> {
 function sceneCloud(): ReturnType<SceneBuilder> {
   const scene = new THREE.Scene();
   const group = new THREE.Group();
-  const mat = createWireframeMaterial(0.55);
-  const main = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.SphereGeometry(0.65, 14, 10)), mat);
+  const mat = createWireframeMaterial(0.7);
+  const main = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.SphereGeometry(0.65, 8, 6)), mat);
   group.add(main);
-  const torus1 = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.TorusGeometry(0.85, 0.06, 10, 32)), createWireframeMaterial(0.35));
+  const torus1 = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.TorusGeometry(0.85, 0.06, 8, 20)), createWireframeMaterial(0.35));
   torus1.rotation.set(Math.PI / 4, 0, 0);
   group.add(torus1);
-  const torus2 = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.TorusGeometry(0.85, 0.06, 10, 32)), createWireframeMaterial(0.35));
+  const torus2 = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.TorusGeometry(0.85, 0.06, 8, 20)), createWireframeMaterial(0.35));
   torus2.rotation.set(-Math.PI / 4, Math.PI / 2, 0);
   group.add(torus2);
   scene.add(group);
@@ -80,7 +83,7 @@ function sceneCloud(): ReturnType<SceneBuilder> {
 function sceneDatabase(): ReturnType<SceneBuilder> {
   const scene = new THREE.Scene();
   const group = new THREE.Group();
-  const mat = createWireframeMaterial(0.55);
+  const mat = createWireframeMaterial(0.7);
   const tiers: [number, number, number, number, number, number][] = [
     [0.72, 0.72, 0.28, 0,  0.58, 0],
     [0.82, 0.82, 0.28, 0,  0,    0],
@@ -100,7 +103,7 @@ function sceneDatabase(): ReturnType<SceneBuilder> {
 function sceneSecurity(): ReturnType<SceneBuilder> {
   const scene = new THREE.Scene();
   const group = new THREE.Group();
-  const mat = createWireframeMaterial(0.55);
+  const mat = createWireframeMaterial(0.7);
   const shape = new THREE.Shape();
   shape.moveTo(-0.7,  0.85);
   shape.lineTo( 0.7,  0.85);
@@ -120,7 +123,7 @@ function sceneSecurity(): ReturnType<SceneBuilder> {
 function scenePerformance(): ReturnType<SceneBuilder> {
   const scene = new THREE.Scene();
   const group = new THREE.Group();
-  const mat = createWireframeMaterial(0.55);
+  const mat = createWireframeMaterial(0.7);
   const shape = new THREE.Shape();
   shape.moveTo( 0.28,  1.0);
   shape.lineTo(-0.12,  0.08);
@@ -154,11 +157,27 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
   const scenes = BUILDERS.map(build => build());
 
   const renderers = canvasSlots.map((slot) => {
+    const w = slot.clientWidth;
+    const h = slot.clientHeight;
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(CANVAS_SIZE, CANVAS_SIZE, false);
+    renderer.setSize(w, h, false);
+    renderer.setClearColor(0x000000, 1);
     slot.appendChild(renderer.domElement);
     return renderer;
+  });
+
+  const composers = scenes.map((s, i) => {
+    const w = canvasSlots[i].clientWidth;
+    const h = canvasSlots[i].clientHeight;
+    const composer = new EffectComposer(renderers[i]);
+    composer.addPass(new RenderPass(s.scene, camera));
+    const bloom = new UnrealBloomPass(
+      new THREE.Vector2(w, h),
+      1.0, 0.8, 0,
+    );
+    composer.addPass(bloom);
+    return composer;
   });
 
   const SPEEDS = [0.003, 0.005, 0.004, 0.006, 0.0045, 0.0055];
@@ -169,7 +188,7 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
     rafId = requestAnimationFrame(tick);
     for (let i = 0; i < scenes.length; i++) {
       if (!reducedMotion) scenes[i].group.rotation.y += SPEEDS[i];
-      renderers[i].render(scenes[i].scene, camera);
+      composers[i].render();
     }
   }
 
@@ -187,7 +206,7 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
 
   if (reducedMotion) {
     for (let i = 0; i < scenes.length; i++) {
-      renderers[i].render(scenes[i].scene, camera);
+      composers[i].render();
     }
   }
 
@@ -201,6 +220,7 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
         }
       });
     });
+    composers.forEach(c => c.dispose());
     renderers.forEach(r => r.dispose());
   }
 

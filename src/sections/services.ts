@@ -13,8 +13,10 @@ export function services(): HTMLElement {
         ${SERVICES.map((s, i) => `
           <div class="service-card" data-index="${i}">
             <div class="service-card-icon" aria-hidden="true"></div>
-            <h3 class="service-card-title">${s.title}</h3>
-            <p class="service-card-desc">${s.description}</p>
+            <div class="service-card-text">
+              <h3 class="service-card-title">${s.title}</h3>
+              <p class="service-card-desc">${s.description}</p>
+            </div>
           </div>
         `).join("")}
       </div>
