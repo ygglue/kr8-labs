@@ -4,9 +4,9 @@ export const CONTACT_EMAIL = "hello@kr8labs.com";
 
 export const SITE = {
   eyebrow: "CUSTOM SOFTWARE • WEB DEVELOPMENT • UI/UX",
-  headline: "Custom Web Development for Businesses That Need to Scale",
+  headline: "Custom web development that scales",
   subcopy:
-    "We partner with startups and growing businesses to design, build, and launch custom websites, SaaS platforms, and web applications. Every solution is engineered for performance, security, and long-term scalability.",
+    "We build custom websites, SaaS, and web apps for growing businesses — fast, secure, and built to last.",
   ctaPrimary: "Let's Talk",
   ctaSecondary: "View Our Work",
 };

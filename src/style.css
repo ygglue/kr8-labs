@@ -214,7 +214,13 @@ section {
 .hero {
   padding-top: 120px;
   padding-bottom: 80px;
-  max-width: 880px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero-text {
+  min-width: 0;
 }
 .hero .eyebrow {
   margin-bottom: 24px;
@@ -239,6 +245,20 @@ section {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+.hero-visual {
+  border: 1px solid var(--border);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--surface);
+  justify-self: end;
+  width: 100%;
+  max-width: 360px;
+}
+.hero-ripple {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* --- Services — card grid ------------------------------------------- */
@@ -528,6 +548,26 @@ section {
 
 /* --- Responsive ----------------------------------------------------- */
 @media (max-width: 768px) {
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: translateY(-100%);
+    transition: transform 200ms var(--ease);
+  }
+  .nav.nav-visible {
+    transform: translateY(0);
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 32px;
+  }
+  .hero-visual {
+    aspect-ratio: 4 / 3;
+    order: -1;
+  }
   .services-grid {
     grid-template-columns: repeat(2, 1fr);
   }
