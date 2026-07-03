@@ -13,11 +13,38 @@ export function nav(): HTMLElement {
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <a class="btn btn-primary btn-sm" href="mailto:${CONTACT_EMAIL}">
+      <a class="btn btn-primary btn-sm nav-cta" href="mailto:${CONTACT_EMAIL}">
         ${SITE.ctaPrimary}
       </a>
     </header>
   `);
+
+  const navCta = header.querySelector(".nav-cta") as HTMLElement;
+
+  setTimeout(() => {
+    let heroAway = false;
+    let ctaNear = false;
+
+    function update() {
+      navCta.classList.toggle("nav-cta-visible", heroAway && !ctaNear);
+    }
+
+    const heroActions = document.querySelector(".hero-actions");
+    if (heroActions) {
+      new IntersectionObserver(
+        ([entry]) => { heroAway = !entry.isIntersecting; update(); },
+        { threshold: 0 }
+      ).observe(heroActions);
+    }
+
+    const ctaSection = document.getElementById("contact");
+    if (ctaSection) {
+      new IntersectionObserver(
+        ([entry]) => { ctaNear = entry.isIntersecting; update(); },
+        { threshold: 0.1 }
+      ).observe(ctaSection);
+    }
+  }, 50);
 
   const mql = window.matchMedia("(max-width: 768px)");
 

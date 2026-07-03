@@ -39,6 +39,7 @@
 
 html {
   scroll-behavior: smooth;
+  overscroll-behavior: none;
   scrollbar-width: none;
 }
 html::-webkit-scrollbar {
@@ -209,6 +210,17 @@ section {
 }
 .nav-links a:hover {
   color: var(--text);
+}
+.nav-cta {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+}
+.nav-cta.nav-cta-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 /* --- Hero ----------------------------------------------------------- */
