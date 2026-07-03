@@ -1,13 +1,15 @@
-export function initRipple(canvas: HTMLCanvasElement): () => void {
+export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => void {
   const ctx = canvas.getContext("2d")!;
   const dpr = Math.min(window.devicePixelRatio, 2);
-  const FONT_SIZE = 14;
+  const FONT_SIZE = 8;
   const CELL_W = FONT_SIZE * 0.6;
   const CELL_H = FONT_SIZE;
-  const CHARS = " .:-=+*#%@";
+  const CHARS = ".:-=+*#%@";
   const SCALE = (CHARS.length - 1) / 255;
   const DIST_DAMPING = 0.96;
   const TARGET_MS = 1000 / 30;
+  const MASK_THRESHOLD = 0.1;
+  const MASK_SCALE = 0.7;
 
   const WAVES = [
     { freq: 0.10, amp: 90, speed: 0.012, dirX: 0.95, dirY: 0.31, phase: 0 },
@@ -22,6 +24,7 @@ export function initRipple(canvas: HTMLCanvasElement): () => void {
   let dist1 = new Float32Array(0);
   let dist2 = new Float32Array(0);
   let smooth = new Float32Array(0);
+  let mask = new Float32Array(0);
   let rafId = 0;
   let lastTime = 0;
   let simTime = 0;
@@ -29,7 +32,65 @@ export function initRipple(canvas: HTMLCanvasElement): () => void {
   let lastCellX = -1;
   let lastCellY = -1;
 
+  let iconAlpha: Uint8ClampedArray | null = null;
+  let iconW = 0;
+  let iconH = 0;
+
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (iconUrl) {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = iconUrl;
+    img.onload = () => {
+      iconW = img.naturalWidth;
+      iconH = img.naturalHeight;
+      const c = document.createElement("canvas");
+      c.width = iconW;
+      c.height = iconH;
+      const cx = c.getContext("2d")!;
+      cx.drawImage(img, 0, 0);
+      iconAlpha = cx.getImageData(0, 0, iconW, iconH).data;
+      computeMask();
+    };
+  }
+
+  function computeMask() {
+    if (!iconAlpha || cols === 0 || rows === 0) return;
+    const rect = canvas.getBoundingClientRect();
+    const cw = rect.width;
+    const ch = rect.height;
+    if (cw <= 0 || ch <= 0) return;
+
+    mask = new Float32Array(cols * rows);
+
+    const iconAspect = iconW / iconH;
+    const canvasAspect = cw / ch;
+    let dw: number, dh: number, dx: number, dy: number;
+    if (iconAspect > canvasAspect) {
+      dw = cw * MASK_SCALE;
+      dh = (cw * MASK_SCALE) / iconAspect;
+    } else {
+      dh = ch * MASK_SCALE;
+      dw = (ch * MASK_SCALE) * iconAspect;
+    }
+    dx = (cw - dw) / 2;
+    dy = (ch - dh) / 2;
+
+    for (let gy = 0; gy < rows; gy++) {
+      for (let gx = 0; gx < cols; gx++) {
+        const px = gx * CELL_W + CELL_W / 2;
+        const py = gy * CELL_H + CELL_H / 2;
+        const ix = ((px - dx) / dw) * iconW;
+        const iy = ((py - dy) / dh) * iconH;
+        if (ix < 0 || ix >= iconW || iy < 0 || iy >= iconH) {
+          mask[gy * cols + gx] = 0;
+        } else {
+          mask[gy * cols + gx] = iconAlpha[(Math.round(iy) * iconW + Math.round(ix)) * 4 + 3] / 255;
+        }
+      }
+    }
+  }
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -46,17 +107,18 @@ export function initRipple(canvas: HTMLCanvasElement): () => void {
     dist1 = new Float32Array(cols * rows);
     dist2 = new Float32Array(cols * rows);
     smooth = new Float32Array(cols * rows);
+    computeMask();
     simTime = 0;
     lastCellX = -1;
     lastCellY = -1;
   }
 
   function waveHeight(x: number, y: number): number {
-    let h = 0;
-    for (const w of WAVES) {
-      h += w.amp * Math.sin(w.freq * (x * w.dirX + y * w.dirY) + w.phase + simTime * w.speed);
+    let height = 0;
+    for (const wave of WAVES) {
+      height += wave.amp * Math.sin(wave.freq * (x * wave.dirX + y * wave.dirY) + wave.phase + simTime * wave.speed);
     }
-    return h;
+    return height;
   }
 
   function disturb(x: number, y: number, mag: number) {
@@ -86,9 +148,14 @@ export function initRipple(canvas: HTMLCanvasElement): () => void {
       let line = "";
       const base = y * cols;
       for (let x = 0; x < cols; x++) {
-        const raw = waveHeight(x, y) + dist1[base + x];
-        smooth[base + x] = smooth[base + x] * 0.75 + raw * 0.25;
-        const idx = Math.min(Math.floor(Math.abs(smooth[base + x]) * SCALE), CHARS.length - 1);
+        const mi = base + x;
+        if (iconAlpha && mask[mi] >= MASK_THRESHOLD) {
+          line += " ";
+          continue;
+        }
+        const raw = waveHeight(x, y) + dist1[mi];
+        smooth[mi] = smooth[mi] * 0.75 + raw * 0.25;
+        const idx = Math.min(Math.floor(Math.abs(smooth[mi]) * SCALE), CHARS.length - 1);
         line += CHARS[idx];
       }
       ctx.fillText(line, 0, y * CELL_H);
@@ -143,12 +210,18 @@ export function initRipple(canvas: HTMLCanvasElement): () => void {
     for (let y = 0; y < rows; y++) {
       let line = "";
       for (let x = 0; x < cols; x++) {
+        const mi = y * cols + x;
+        if (iconAlpha && mask[mi] >= MASK_THRESHOLD) {
+          line += " ";
+          continue;
+        }
         const v = waveHeight(x, y);
         const idx = Math.min(Math.floor(Math.abs(v) * SCALE), CHARS.length - 1);
         line += CHARS[idx];
       }
       ctx.fillText(line, 0, y * CELL_H);
     }
+    render();
   }
 
   const parent = canvas.parentElement;

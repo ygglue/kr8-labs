@@ -3,6 +3,7 @@ import { CONTACT_EMAIL, SITE } from "../data.ts";
 import { initRipple } from "../ripple.ts";
 
 export function hero(): HTMLElement {
+  const iconSrc = import.meta.env.BASE_URL + "icon.png";
   const section = fromHTML(`
     <section class="hero" id="top">
       <div class="hero-text">
@@ -21,11 +22,12 @@ export function hero(): HTMLElement {
   `);
 
   const canvas = section.querySelector<HTMLCanvasElement>(".hero-ripple")!;
-  const cleanup = initRipple(canvas);
+
+  const cleanupRipple = initRipple(canvas, iconSrc);
 
   const originalRemove = section.remove.bind(section);
   section.remove = () => {
-    cleanup();
+    cleanupRipple();
     originalRemove();
   };
 
