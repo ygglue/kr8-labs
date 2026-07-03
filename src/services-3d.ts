@@ -7,7 +7,6 @@ export interface Services3D {
   destroy(): void;
 }
 
-const CANVAS_SIZE = 160;
 const CAMERA_Z = 3.0;
 const FOV = 45;
 
