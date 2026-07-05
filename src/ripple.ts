@@ -28,7 +28,7 @@ export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => v
   let rafId = 0;
   let lastTime = 0;
   let simTime = 0;
-  let wasRunning = false;
+  let inView: boolean | null = null;
   let lastCellX = -1;
   let lastCellY = -1;
 
@@ -52,6 +52,7 @@ export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => v
       cx.drawImage(img, 0, 0);
       iconAlpha = cx.getImageData(0, 0, iconW, iconH).data;
       computeMask();
+      if (reducedMotion && cols > 0) render();
     };
   }
 
@@ -111,6 +112,7 @@ export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => v
     simTime = 0;
     lastCellX = -1;
     lastCellY = -1;
+    if (reducedMotion) render();
   }
 
   function waveHeight(x: number, y: number): number {
@@ -183,6 +185,18 @@ export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => v
     rafId = 0;
   }
 
+  // Only run once the grid actually exists (resize succeeded) and we're not
+  // known to be off-screen. inView starts null ("unknown") so the first
+  // ResizeObserver delivery starts us immediately instead of waiting on the
+  // much slower IntersectionObserver first callback.
+  function shouldRun() {
+    return !reducedMotion && cols > 0 && rows > 0 && inView !== false;
+  }
+  function updatePlayState() {
+    if (shouldRun()) start();
+    else stop();
+  }
+
   function gridFromEvent(e: MouseEvent): [number, number] {
     const rect = canvas.getBoundingClientRect();
     return [
@@ -206,37 +220,18 @@ export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => v
 
   resize();
 
-  if (reducedMotion) {
-    for (let y = 0; y < rows; y++) {
-      let line = "";
-      for (let x = 0; x < cols; x++) {
-        const mi = y * cols + x;
-        if (iconAlpha && mask[mi] >= MASK_THRESHOLD) {
-          line += " ";
-          continue;
-        }
-        const v = waveHeight(x, y);
-        const idx = Math.min(Math.floor(Math.abs(v) * SCALE), CHARS.length - 1);
-        line += CHARS[idx];
-      }
-      ctx.fillText(line, 0, y * CELL_H);
-    }
-    render();
-  }
-
   const parent = canvas.parentElement;
   const ro = new ResizeObserver(() => {
-    wasRunning = rafId !== 0;
     stop();
     resize();
-    if (wasRunning && !reducedMotion) start();
+    updatePlayState();
   });
   if (parent) ro.observe(parent);
 
   const io = new IntersectionObserver(
     ([entry]) => {
-      if (entry.isIntersecting && !reducedMotion) start();
-      else stop();
+      inView = entry.isIntersecting;
+      updatePlayState();
     },
     { threshold: 0 },
   );
@@ -246,6 +241,12 @@ export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => v
     canvas.addEventListener("click", onClick);
     canvas.addEventListener("mousemove", onMouseMove);
   }
+
+  // Kick-start the animation if the initial resize() succeeded (cols>0 and
+  // inView is not false). If resize() failed because the canvas had no layout
+  // yet, the ResizeObserver set up above will fire once the element is
+  // connected to the DOM and trigger start() then.
+  updatePlayState();
 
   return () => {
     stop();
