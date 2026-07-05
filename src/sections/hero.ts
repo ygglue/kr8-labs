@@ -23,10 +23,22 @@ export function hero(): HTMLElement {
 
   const canvas = section.querySelector<HTMLCanvasElement>(".hero-ripple")!;
 
-  const cleanupRipple = initRipple(canvas, iconSrc);
+  // Defer initRipple until the section is in the DOM. Observing a detached
+  // element makes IntersectionObserver fire isIntersecting:false once and
+  // never re-fire true after the parent is appended, which left the ripple
+  // blank until the user scrolled. Deferring one frame (~16ms) ensures
+  // resize() gets real dimensions and the IO fires true immediately.
+  let cleanupRipple = () => {};
+  let removed = false;
+
+  requestAnimationFrame(() => {
+    if (removed) return;
+    cleanupRipple = initRipple(canvas, iconSrc);
+  });
 
   const originalRemove = section.remove.bind(section);
   section.remove = () => {
+    removed = true;
     cleanupRipple();
     originalRemove();
   };

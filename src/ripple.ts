@@ -228,8 +228,13 @@ export function initRipple(canvas: HTMLCanvasElement, iconUrl?: string): () => v
   });
   if (parent) ro.observe(parent);
 
+  // Ignore the initial isIntersecting:false that fires when the canvas is
+  // detached. Without this, observing a detached element sets inView=false and
+  // (if the parent is appended rather than the canvas directly) the IO never
+  // re-fires true, permanently locking the animation out.
   const io = new IntersectionObserver(
     ([entry]) => {
+      if (!entry.isIntersecting && inView === null) return;
       inView = entry.isIntersecting;
       updatePlayState();
     },
