@@ -1,3 +1,4 @@
+
 /* ============================================================
    KR8 Labs — landing page styles
    Tokens → base → layout → components → sections → responsive
@@ -225,6 +226,7 @@ section {
 
 /* --- Hero ----------------------------------------------------------- */
 .hero {
+  position: relative;
   padding-top: 120px;
   padding-bottom: 80px;
   display: grid;
@@ -233,6 +235,8 @@ section {
   align-items: center;
 }
 .hero-text {
+  position: relative;
+  z-index: 1;
   min-width: 0;
 }
 .hero .eyebrow {
@@ -246,6 +250,37 @@ section {
   color: var(--text);
   text-wrap: balance;
 }
+.hero-accent-word {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-lavender);
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+  text-shadow:
+    0 0 6px rgba(196, 181, 253, 1),
+    0 0 20px rgba(139, 92, 246, 0.8),
+    0 0 55px rgba(108, 64, 255, 0.45),
+    0 0 110px rgba(108, 64, 255, 0.2);
+}
+.hero-accent-word-sizer {
+  visibility: hidden;
+  white-space: nowrap;
+}
+.hero-accent-word-display {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+.hero-accent-word-char {
+  display: inline-block;
+}
+.hero-accent-word-char.is-scrambling {
+  opacity: 0.45;
+}
+
 .hero-sub {
   margin-top: 24px;
   max-width: 560px;
@@ -259,17 +294,20 @@ section {
   flex-wrap: wrap;
   gap: 12px;
 }
+/* Invisible grid item — reserves where the particle logo assembles.
+   The actual canvas is `.hero-particles`, a full-bleed background layer. */
 .hero-visual {
-  position: relative;
-  border: 1px solid var(--border);
   aspect-ratio: 3 / 4;
-  overflow: hidden;
-  background: var(--surface);
   justify-self: end;
   width: 100%;
   max-width: 360px;
+  visibility: hidden;
+  pointer-events: none;
 }
-.hero-ripple {
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   display: block;
   width: 100%;
   height: 100%;

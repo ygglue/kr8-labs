@@ -4,7 +4,8 @@ export const CONTACT_EMAIL = "hello@kr8labs.com";
 
 export const SITE = {
   eyebrow: "CUSTOM SOFTWARE • WEB DEVELOPMENT • UI/UX",
-  headline: "Custom web development that scales",
+  headlinePrefix: "Custom web development that",
+  morphWords: ["scales", "ships", "performs", "converts"],
   subcopy:
     "We build custom websites, SaaS, and web apps for growing businesses — fast, secure, and built to last.",
   ctaPrimary: "Let's Talk",

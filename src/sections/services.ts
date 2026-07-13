@@ -23,10 +23,21 @@ export function services(): HTMLElement {
     </section>
   `);
 
-  requestAnimationFrame(() => {
-    const canvasSlots = Array.from(section.querySelectorAll<HTMLElement>('.service-card-icon'));
-    initServices3D(canvasSlots);
-  });
+  // Building the 6 WebGL renderers + bloom passes is a ~350ms synchronous
+  // main-thread block. The grid is below the fold on load, so defer it until
+  // the section approaches the viewport — this keeps it off the critical path
+  // and avoids the cost entirely for visitors who never scroll here.
+  const grid = section.querySelector<HTMLElement>('.services-grid')!;
+  const initObserver = new IntersectionObserver(
+    (entries, obs) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      obs.disconnect();
+      const canvasSlots = Array.from(section.querySelectorAll<HTMLElement>('.service-card-icon'));
+      initServices3D(canvasSlots);
+    },
+    { rootMargin: '200px 0px' },
+  );
+  initObserver.observe(grid);
 
   return section;
 }
