@@ -7,6 +7,7 @@ type Particle = {
   vy: number;
   phase: number;
   freq: number;
+  excite: number;
 };
 
 const GAP = 3; // px between sampled source pixels — controls particle density
@@ -19,6 +20,12 @@ const DAMPING = 0.82;
 const RESIZE_DEBOUNCE_MS = 150;
 const TOUCH_IDLE_MS = 220; // auto-release the repulsion zone if no touchend/mouseleave arrives
 const COLOR: [number, number, number] = [196, 181, 253]; // --accent-lavender
+const BRIGHT_COLOR: [number, number, number] = [255, 255, 255]; // disrupted-particle target color
+// A particle only spends a couple of frames near the cursor before repulsion
+// pushes it past REPEL_RADIUS (where targetExcite drops to 0), so the rise
+// has to be steep to read as a visible flash in that short window.
+const EXCITE_RISE = 0.55; // brighten quickly on disruption
+const EXCITE_FALL = 0.06; // fade back to base color gently
 
 /**
  * Adapted from Originkit's SVG Particle component: samples an image's alpha
@@ -119,6 +126,7 @@ export function initParticles(canvas: HTMLCanvasElement, imageUrl: string, ancho
           vy: 0,
           phase: Math.random() * Math.PI * 2,
           freq: 0.4 + Math.random() * 0.4,
+          excite: 0,
         });
       }
     }
@@ -174,22 +182,30 @@ export function initParticles(canvas: HTMLCanvasElement, imageUrl: string, ancho
         const ty = p.homeY + Math.cos(timeSec * p.freq + p.phase) * IDLE_AMP;
         let fx = (tx - p.x) * SPRING;
         let fy = (ty - p.y) * SPRING;
+        let targetExcite = 0;
         if (mouseClient.active) {
           const dx = p.x - mx;
           const dy = p.y - my;
           const distSq = dx * dx + dy * dy;
           if (distSq < REPEL_RADIUS * REPEL_RADIUS && distSq > 0.01) {
             const dist = Math.sqrt(distSq);
-            const push = (REPEL_FORCE * (1 - dist / REPEL_RADIUS)) / dist;
+            const falloff = 1 - dist / REPEL_RADIUS;
+            const push = (REPEL_FORCE * falloff) / dist;
             fx += dx * push * 0.02;
             fy += dy * push * 0.02;
+            targetExcite = falloff;
           }
         }
         p.vx = (p.vx + fx) * DAMPING;
         p.vy = (p.vy + fy) * DAMPING;
         p.x += p.vx;
         p.y += p.vy;
+        p.excite += (targetExcite - p.excite) * (targetExcite > p.excite ? EXCITE_RISE : EXCITE_FALL);
       }
+
+      const cr = r + (BRIGHT_COLOR[0] - r) * p.excite;
+      const cg = g + (BRIGHT_COLOR[1] - g) * p.excite;
+      const cb = b + (BRIGHT_COLOR[2] - b) * p.excite;
 
       const bx = Math.round((p.x - boundsX) * dpr);
       const by = Math.round((p.y - boundsY) * dpr);
@@ -201,9 +217,9 @@ export function initParticles(canvas: HTMLCanvasElement, imageUrl: string, ancho
           const ix = bx + ddx;
           if (ix < 0 || ix >= bufW) continue;
           const idx = (row + ix) * 4;
-          buf[idx] = r;
-          buf[idx + 1] = g;
-          buf[idx + 2] = b;
+          buf[idx] = cr;
+          buf[idx + 1] = cg;
+          buf[idx + 2] = cb;
           buf[idx + 3] = 255;
         }
       }

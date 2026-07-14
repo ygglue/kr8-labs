@@ -181,27 +181,54 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
 
   const SPEEDS = [0.003, 0.005, 0.004, 0.006, 0.0045, 0.0055];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let rafId = 0;
+  const TARGET_MS = 1000 / 30;
+  const BASELINE_MS = 1000 / 60;
 
-  function tick() {
+  let rafId = 0;
+  let lastTime = 0;
+  let inViewport = false;
+  let tabVisible = document.visibilityState === 'visible';
+
+  function tick(time: number) {
     rafId = requestAnimationFrame(tick);
+    const dt = Math.min(time - lastTime, 100);
+    if (dt < TARGET_MS) return;
+    lastTime = time;
+
+    const rotationScale = dt / BASELINE_MS;
     for (let i = 0; i < scenes.length; i++) {
-      if (!reducedMotion) scenes[i].group.rotation.y += SPEEDS[i];
+      if (!reducedMotion) scenes[i].group.rotation.y += SPEEDS[i] * rotationScale;
       composers[i].render();
     }
   }
 
-  function start() { if (!rafId) rafId = requestAnimationFrame(tick); }
-  function stop()  { cancelAnimationFrame(rafId); rafId = 0; }
+  function start() {
+    if (rafId) return;
+    lastTime = 0;
+    rafId = requestAnimationFrame(tick);
+  }
+  function stop() { cancelAnimationFrame(rafId); rafId = 0; }
+
+  function updatePlayState() {
+    if (inViewport && tabVisible && !reducedMotion) start();
+    else stop();
+  }
 
   const grid = canvasSlots[0].closest<HTMLElement>(".services-grid")!;
   const observer = new IntersectionObserver(
     ([entry]) => {
-      entry.isIntersecting && !reducedMotion ? start() : stop();
+      inViewport = entry.isIntersecting;
+      updatePlayState();
     },
     { threshold: 0 },
   );
   observer.observe(grid);
+
+  function onVisibilityChange() {
+    tabVisible = document.visibilityState === 'visible';
+    updatePlayState();
+  }
+  document.addEventListener('visibilitychange', onVisibilityChange);
 
   if (reducedMotion) {
     for (let i = 0; i < scenes.length; i++) {
@@ -212,6 +239,7 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
   function destroy() {
     stop();
     observer.disconnect();
+    document.removeEventListener('visibilitychange', onVisibilityChange);
     scenes.forEach((s) => {
       s.scene.traverse((child) => {
         if (child instanceof THREE.Mesh || child instanceof THREE.Line) {
