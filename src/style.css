@@ -605,6 +605,22 @@ section {
   font-size: 0.875rem;
   font-family: var(--font-mono);
 }
+.footer-socials {
+  display: flex;
+  gap: 16px;
+}
+.footer-socials a {
+  color: var(--text-muted);
+  transition: color var(--btn-transition);
+}
+.footer-socials a:hover {
+  color: var(--text);
+}
+.footer-socials svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
 .footer-copy {
   color: var(--text-subtle);
   font-size: 0.8125rem;

@@ -1,6 +1,30 @@
 /** Site copy + content definitions, kept in one place for easy editing. */
 
-export const CONTACT_EMAIL = "hello@kr8labs.com";
+export const CONTACT_EMAIL = "mail@kr8labs.com";
+
+export interface SocialLink {
+  name: string;
+  url: string;
+  icon: string;
+}
+
+export const SOCIALS: SocialLink[] = [
+  {
+    name: "Facebook",
+    url: "https://www.facebook.com/kr8.labs",
+    icon: `<path d="M15 3h-3a5 5 0 0 0-5 5v3H4v4h3v6h4v-6h3l1-4h-4V8a1 1 0 0 1 1-1h3Z"/>`,
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/kr8_labs/",
+    icon: `<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>`,
+  },
+  {
+    name: "TikTok",
+    url: "https://www.tiktok.com/@kr8_labs",
+    icon: `<path d="M16 3v9.5a3.5 3.5 0 1 1-3-3.46V6a6.5 6.5 0 1 0 6.5 6.5"/><path d="M16 3a5 5 0 0 0 5 5"/>`,
+  },
+];
 
 export const SITE = {
   eyebrow: "CUSTOM SOFTWARE • WEB DEVELOPMENT • UI/UX",
