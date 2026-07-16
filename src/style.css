@@ -390,12 +390,14 @@ section {
 
 /* --- Tech Stack ----------------------------------------------------- */
 .tech-stack-header,
+.works-header,
 .why-kr8-header,
 .process-header,
 .faq-header {
   margin-bottom: 64px;
 }
 .tech-stack-header h2,
+.works-header h2,
 .why-kr8-header h2,
 .process-header h2,
 .faq-header h2 {
@@ -435,6 +437,100 @@ section {
 .tech-stack-list li {
   font-size: 0.9375rem;
   color: var(--text);
+}
+
+/* --- Recent Work ------------------------------------------------------ */
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+.work-card {
+  display: block;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  text-decoration: none;
+  transition: background var(--btn-transition), border-color var(--btn-transition);
+}
+.work-card:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+}
+.work-card-frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.work-card-chrome {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 1;
+}
+.work-card-chrome span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.work-card-image {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 28px);
+  object-fit: cover;
+  object-position: top;
+  transition: transform 400ms var(--ease);
+}
+.work-card:hover .work-card-image {
+  transform: scale(1.03);
+}
+.work-card-text {
+  padding: 28px;
+}
+.work-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.work-card-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.work-card-arrow {
+  font-size: 1.125rem;
+  color: var(--accent-lavender);
+  transition: transform var(--btn-transition);
+}
+.work-card:hover .work-card-arrow {
+  transform: translate(2px, -2px);
+}
+.work-card-tagline {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-lavender);
+}
+.work-card-desc {
+  margin-top: 12px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
 /* --- Why KR8 Labs --------------------------------------------------- */
@@ -686,6 +782,10 @@ section {
   }
   .tech-stack-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .works-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
   .why-kr8-list {
     grid-template-columns: 1fr;

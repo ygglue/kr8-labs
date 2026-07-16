@@ -14,7 +14,7 @@ export function hero(): HTMLElement {
         <p class="hero-sub">${SITE.subcopy}</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="mailto:${CONTACT_EMAIL}">${SITE.ctaPrimary}</a>
-          <a class="btn btn-ghost" href="#services">${SITE.ctaSecondary}</a>
+          <a class="btn btn-ghost" href="#works">${SITE.ctaSecondary}</a>
         </div>
       </div>
       <div class="hero-visual"></div>

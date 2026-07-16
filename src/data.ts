@@ -75,6 +75,33 @@ export const SERVICES: Service[] = [
   },
 ];
 
+export interface Work {
+  name: string;
+  tagline: string;
+  description: string;
+  url: string;
+  image: string;
+}
+
+export const WORKS: Work[] = [
+  {
+    name: "Naprey Almario",
+    tagline: "Personal brand & advocacy site",
+    description:
+      "A personal site for a disability inclusion champion and accessible-travel advocate — built to carry his story, recognition, and work into one place.",
+    url: "https://napreyalmario.online/",
+    image: "/works/naprey-almario.png",
+  },
+  {
+    name: "Kamp Malaya",
+    tagline: "Eco-resort & island tours",
+    description:
+      "A booking-ready marketing site for a luxury eco-resort in Balabac, Palawan — built to sell the destination and convert inquiries into bookings.",
+    url: "https://www.kampmalaya.tours/",
+    image: "/works/kamp-malaya.png",
+  },
+];
+
 export const TECH_STACK = [
   { category: "Frontend", items: ["Flutter", "React", "Next.js"] },
   { category: "Backend",  items: ["Node.js", "Go", "Laravel"] },

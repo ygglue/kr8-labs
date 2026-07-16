@@ -5,7 +5,7 @@ export function process(): HTMLElement {
   return fromHTML(`
     <section class="process" id="process">
       <div class="process-header">
-        <p class="eyebrow">04 · PROCESS</p>
+        <p class="eyebrow">05 · PROCESS</p>
         <h2>How We Work</h2>
       </div>
       <div class="process-steps">
