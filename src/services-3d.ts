@@ -169,7 +169,15 @@ export function initServices3D(canvasSlots: HTMLElement[]): Services3D {
   const composers = scenes.map((s, i) => {
     const w = canvasSlots[i].clientWidth;
     const h = canvasSlots[i].clientHeight;
-    const composer = new EffectComposer(renderers[i]);
+    const pixelRatio = renderers[i].getPixelRatio();
+    // EffectComposer renders into its own WebGLRenderTarget rather than
+    // straight to the canvas, so the renderer's antialias:true never
+    // actually applies once post-processing (the bloom pass) is added —
+    // this is what was giving the wireframe edges a jagged/pixelated look.
+    // An explicit multisampled render target restores anti-aliasing through
+    // the composer chain; it's cheap at this resolution (a few MB per icon).
+    const renderTarget = new THREE.WebGLRenderTarget(w * pixelRatio, h * pixelRatio, { samples: 4 });
+    const composer = new EffectComposer(renderers[i], renderTarget);
     composer.addPass(new RenderPass(s.scene, camera));
     const bloom = new UnrealBloomPass(
       new THREE.Vector2(w, h),

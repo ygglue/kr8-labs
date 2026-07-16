@@ -26,7 +26,7 @@ const SHAPE_PCT = 0.78; // curve size, as a fraction of the canvas half-width
 const TUBE_PCT = 0.2; // tube radius, as a fraction of the curve's scale
 const PARTICLE_COUNT = 650;
 const PARTICLE_SIZE = 1.0; // small, bright dots — the glow does the rest
-const ORBIT_SPEED = 0.9;
+const ORBIT_SPEED = 0.3;
 const TRAIL_ALPHA = 0.04; // lower = longer-lingering light trails
 const SPRITE_SIZE = 28; // px, offscreen glow-sprite canvas — drawImage scales it per particle
 const SPRITE_SCALE = 5; // destination sprite diameter = particle "size" × this
@@ -95,6 +95,7 @@ export function initBlackHole(canvas: HTMLCanvasElement): () => void {
   let particles: Particle[] = [];
   let rafId = 0;
   let inView: boolean | null = null;
+  let tabVisible = document.visibilityState === "visible";
   let lastTime = 0;
   let particleSize = PARTICLE_SIZE;
   let particleCount = PARTICLE_COUNT;
@@ -222,7 +223,7 @@ export function initBlackHole(canvas: HTMLCanvasElement): () => void {
     rafId = 0;
   }
   function updatePlayState() {
-    if (!reducedMotion && particles.length > 0 && inView !== false) start();
+    if (!reducedMotion && particles.length > 0 && inView !== false && tabVisible) start();
     else stop();
   }
 
@@ -268,9 +269,16 @@ export function initBlackHole(canvas: HTMLCanvasElement): () => void {
   );
   io.observe(canvas);
 
+  function onVisibilityChange() {
+    tabVisible = document.visibilityState === "visible";
+    updatePlayState();
+  }
+  document.addEventListener("visibilitychange", onVisibilityChange);
+
   return () => {
     stop();
     ro.disconnect();
     io.disconnect();
+    document.removeEventListener("visibilitychange", onVisibilityChange);
   };
 }
