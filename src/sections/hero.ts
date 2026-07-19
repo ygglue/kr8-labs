@@ -7,6 +7,7 @@ export function hero(): HTMLElement {
   const iconSrc = import.meta.env.BASE_URL + "icon.png";
   const section = fromHTML(`
     <section class="hero" id="top">
+      <div class="hero-dim" aria-hidden="true"></div>
       <canvas class="hero-particles" aria-hidden="true"></canvas>
       <div class="hero-text">
         <p class="eyebrow">${SITE.eyebrow}</p>

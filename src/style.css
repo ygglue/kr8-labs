@@ -273,6 +273,11 @@ section {
 /* --- Hero ----------------------------------------------------------- */
 .hero {
   position: relative;
+  /* Also guards against a subtler issue: any descendant that paints outside
+     .hero's box (even via a harmless-looking gradient) can get counted
+     toward the page's layout viewport on mobile, forcing the whole site to
+     zoom out to fit it — this bit us once already with .hero-dim below. */
+  overflow: hidden;
   padding-top: 120px;
   padding-bottom: 80px;
   display: grid;
@@ -280,22 +285,24 @@ section {
   gap: 48px;
   align-items: center;
 }
-/* Dims the #bg topography pattern behind the hero copy with a soft radial
-   streak along the same diagonal the layout reads on (text bottom-left →
-   icon top-right), instead of a hard-edged linear band. */
-.hero::before {
+/* Dims the #bg topography pattern behind the hero copy — an elongated,
+   off-center radial ellipse biased toward the text (bottom-left), instead
+   of a hard-edged linear band. No transform/rotation and no enlarged box:
+   the box exactly matches .hero (inset: 0), so the gradient's own stops are
+   the only thing that determines what's visible — nothing to clip, so no
+   edge can ever show. */
+.hero-dim {
   content: "";
   position: absolute;
-  inset: -15% -10%;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   background: radial-gradient(
-    ellipse 85% 45% at 32% 58%,
+    ellipse 45% 35% at 35% 55%,
     rgba(0, 0, 0, 0.6) 0%,
-    rgba(0, 0, 0, 0.35) 45%,
-    transparent 78%
+    rgba(0, 0, 0, 0.3) 30%,
+    transparent 65%
   );
-  transform: rotate(-20deg);
 }
 .hero-text {
   position: relative;
